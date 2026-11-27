@@ -26,6 +26,6 @@ yarn serve
 | GCP プロジェクト | `hiroden-web` (project ID `hiroden` は取得済みだったため) |
 | Hosting サイト | `hiroden` (`hiroden.web.app`) |
 | deploy 用サービスアカウント | `github-actions@hiroden-web.iam.gserviceaccount.com` (Firebase Hosting 管理者のみ) |
-| 認証 | Workload Identity Federation。pool `github-actions` / provider `github`、`abeyuya/hiroden` のワークフローのみ許可 |
+| 認証 | Workload Identity Federation。pool `github-actions` / provider `github`、`abeyuya/hiroden` の `release/production` ブランチで動くワークフローのみ許可 |
 
 サービスアカウント鍵は発行していない。GitHub の secrets 設定は不要。
