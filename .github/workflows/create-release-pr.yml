@@ -1,0 +1,35 @@
+name: Create a release pull request
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # git-pr-release が main と release ブランチの差分からマージ済み PR を割り出すため全履歴が必要
+          fetch-depth: 0
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4.10"
+      - run: gem install --no-document git-pr-release:2.6.0
+      - name: Run git-pr-release
+        env:
+          GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_PR_RELEASE_BRANCH_PRODUCTION: release/production
+          GIT_PR_RELEASE_BRANCH_STAGING: main
+          # リリース PR タイトルの日時を JST にする
+          TZ: Asia/Tokyo
+        run: git-pr-release --squashed

@@ -1,0 +1,11 @@
+{
+  "name": "hiroden",
+  "private": true,
+  "scripts": {
+    "serve": "firebase emulators:start --only hosting",
+    "deploy:hosting": "firebase deploy --only hosting"
+  },
+  "devDependencies": {
+    "firebase-tools": "15.37.0"
+  }
+}
