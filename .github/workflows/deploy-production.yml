@@ -1,0 +1,31 @@
+name: Deploy to Firebase Hosting Production
+
+on:
+  push:
+    branches:
+      - release/production
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      # checkout が workspace を掃除するため、認証情報ファイルを作る auth は checkout の後に置く
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/766906081501/locations/global/workloadIdentityPools/github-actions/providers/github
+          service_account: github-actions@hiroden-web.iam.gserviceaccount.com
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn deploy:hosting
